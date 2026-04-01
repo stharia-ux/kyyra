@@ -1,0 +1,282 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 1.5rem;
+    font-family: var(--font-sans, sans-serif);
+  }
+
+  .egg-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+  .egg {
+    width: 22px; height: 30px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #e8d8f5;
+    border-radius: 20px;
+    padding: 2rem 1.75rem 1.5rem;
+  }
+
+  .form-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: #5b3fa0;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .form-desc {
+    font-size: 14px;
+    color: #8a7aaa;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.75rem;
+  }
+  .divider-line { flex: 1; height: 1px; background: #f0e6fb; }
+  .divider-eggs { display: flex; gap: 5px; }
+  .divider-egg {
+    width: 10px; height: 14px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
+
+  .field { margin-bottom: 1.25rem; }
+
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #7b5ea7;
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  .req { color: #d4a0c0; margin-left: 2px; }
+
+  .field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #e8d8f5;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #3b2a5a;
+    background: #fdfaff;
+    outline: none;
+    font-family: var(--font-sans, sans-serif);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field input:focus {
+    border-color: #b48dd4;
+    box-shadow: 0 0 0 3px rgba(180,141,212,0.15);
+    background: #fff;
+  }
+  .field input::placeholder { color: #c9b8e0; }
+
+  .hint {
+    font-size: 12px;
+    color: #b0a0cc;
+    margin-top: 5px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: #b48dd4;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans, sans-serif);
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 0.5rem;
+  }
+  .submit-btn:hover { background: #9f75c4; }
+  .submit-btn:active { transform: scale(0.98); }
+
+  .deadline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 1.25rem;
+    padding: 10px 14px;
+    background: #f4fbf6;
+    border: 1px solid #c2ecd0;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #3a7a55;
+    text-align: center;
+  }
+
+  .clock-icon {
+    width: 15px; height: 15px;
+    border: 1.5px solid #5ab07a;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    display: inline-block;
+  }
+  .clock-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 4px; height: 1.5px;
+    background: #5ab07a;
+    transform-origin: left center;
+    transform: translate(0, -50%) rotate(-45deg);
+  }
+  .clock-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 3px; height: 1.5px;
+    background: #5ab07a;
+    transform-origin: left center;
+    transform: translate(0, -50%) rotate(90deg);
+  }
+
+  .success-banner {
+    display: none;
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    color: #166534;
+    font-size: 15px;
+    font-weight: 500;
+    margin-top: 1rem;
+  }
+
+  .error-msg {
+    display: none;
+    font-size: 12px;
+    color: #b0294a;
+    margin-top: 5px;
+  }
+</style>
+
+<div class="wrap">
+  <div class="egg-row" id="topEggs"></div>
+
+  <div class="card">
+    <div class="form-title">Easter candy guessing contest</div>
+    <div class="form-desc">Take your best guess! How many candies are in the jar?<br>Submit your answer below. One entry per person.</div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-eggs" id="divEggs"></div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div id="formArea">
+      <div class="field">
+        <label class="field-label" for="nameField">Full name <span class="req">*</span></label>
+        <input type="text" id="nameField" placeholder="e.g. Sarah Mitchell" maxlength="80" autocomplete="name"/>
+        <div class="error-msg" id="nameErr">Please enter your full name.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="guessField">Candy count guess <span class="req">*</span></label>
+        <input type="number" id="guessField" placeholder="e.g. 312" min="1" max="9999"/>
+        <div class="hint">Enter a whole number greater than 0.</div>
+        <div class="error-msg" id="guessErr">Please enter a valid number.</div>
+      </div>
+
+      <button class="submit-btn" onclick="handleSubmit()">Submit my guess</button>
+
+      <div class="success-banner" id="successBanner"></div>
+    </div>
+
+    <div class="deadline">
+      <span class="clock-icon"></span>
+      <span>Deadline to submit: <strong>Monday at 5:00 PM</strong>. Closest guess wins!</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'easter-candy-jar-v2';
+
+const eggColors = ['#f9a8d4','#c4b5fd','#86efac','#93c5fd','#fde68a','#f9a8d4','#c4b5fd','#86efac'];
+const divColors = ['#f9a8d4','#c4b5fd','#86efac','#93c5fd','#fde68a'];
+
+function buildEggs() {
+  const top = document.getElementById('topEggs');
+  top.innerHTML = eggColors.map(c =>
+    `<span class="egg" style="background:${c}"></span>`
+  ).join('');
+  const div = document.getElementById('divEggs');
+  div.innerHTML = divColors.map(c =>
+    `<span class="divider-egg" style="background:${c}"></span>`
+  ).join('');
+}
+
+function showErr(id, show) {
+  document.getElementById(id).style.display = show ? 'block' : 'none';
+}
+
+async function handleSubmit() {
+  const name = document.getElementById('nameField').value.trim();
+  const guessRaw = document.getElementById('guessField').value.trim();
+  const guess = parseInt(guessRaw, 10);
+
+  let valid = true;
+  if (!name) { showErr('nameErr', true); valid = false; } else { showErr('nameErr', false); }
+  if (!guessRaw || isNaN(guess) || guess < 1) { showErr('guessErr', true); valid = false; } else { showErr('guessErr', false); }
+  if (!valid) return;
+
+  let entries = [];
+  try {
+    const r = await window.storage.get(STORAGE_KEY, true);
+    if (r && r.value) entries = JSON.parse(r.value);
+  } catch(e) {}
+
+  const dup = entries.find(e => e.name.toLowerCase() === name.toLowerCase());
+  if (dup) {
+    const banner = document.getElementById('successBanner');
+    banner.style.display = 'block';
+    banner.style.background = '#fff7ed';
+    banner.style.borderColor = '#fdba74';
+    banner.style.color = '#92400e';
+    banner.textContent = `${name} has already submitted a guess of ${dup.guess}. One entry per person!`;
+    return;
+  }
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' });
+  entries.push({ name, guess, time: timeStr });
+
+  try { await window.storage.set(STORAGE_KEY, JSON.stringify(entries), true); } catch(e) {}
+
+  document.getElementById('nameField').value = '';
+  document.getElementById('guessField').value = '';
+
+  const banner = document.getElementById('successBanner');
+  banner.style.display = 'block';
+  banner.style.background = '#f0fdf4';
+  banner.style.borderColor = '#86efac';
+  banner.style.color = '#166534';
+  banner.textContent = `Got it, ${name}! Your guess of ${guess.toLocaleString()} has been entered. Good luck!`;
+}
+
+buildEggs();
+</script>
